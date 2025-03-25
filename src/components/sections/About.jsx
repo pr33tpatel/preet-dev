@@ -7,8 +7,8 @@ export const About = () => {
     return (
     <section id ="about" className="min-h-screen flex items-center justify-center py-20"
     >
-        <div className="max-w-3xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-red-500 to-purple-600 bg-clip-text text-transparent text-center">
+        <div className="max-w-4xl mx-auto ">
+            <h2 className="text-5xl font-bold mb-8 bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-transparent text-center">
                 About Me
             </h2>
 
@@ -19,7 +19,7 @@ export const About = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                     
                     {/* Education Section */}
-                    <div className="py-6 px-6 rounded-xl border-white/10 border hover:-translate-y-0.75 transition-all">
+                    <div className="py-3 px-6 rounded-xl border-white/10 border hover:-translate-y-0.75 transition-all">
                         <h3 className="text-xl font-bold text-center mb-2">Education</h3>
                         
                         <div className="text-gray-300">
@@ -54,7 +54,7 @@ export const About = () => {
                     </div>
 
                     {/* Experience Section*/}
-                    <div className="p-6 rounded-xl border-white/10 border hover:-translate-y-0.75 transition-all">
+                    <div className="py-3 px-6 rounded-xl border-white/10 border hover:-translate-y-0.75 transition-all">
                         <h3 className="text-xl font-bold text-center mb-2">Experience</h3>
                         <div className="text-gray-300 space-y-4">
                             <div>
@@ -114,10 +114,10 @@ export const About = () => {
 
 
             {/* Skills Section */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="rounded-xl p-6 hover:-translate-y-1 transition-all">
                 <h3 className="text-xl text-center font-bold mb-6">Frontend</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   {frontendSkills.map((tech, key) => (
                     <span
                       key={key}
@@ -133,7 +133,7 @@ export const About = () => {
 
               <div className="rounded-xl p-6 hover:-translate-y-1 transition-all">
                 <h3 className="text-xl text-center font-bold mb-6"> Backend</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   {backendSkills.map((tech, key) => (
                     <span
                       key={key}
@@ -148,7 +148,7 @@ export const About = () => {
               </div>
               <div className="rounded-xl p-6 hover:-translate-y-1 transition-all">
                 <h3 className="text-xl text-center font-bold mb-6">AI/ML</h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap justify-center gap-2">
                   {aimlSkills.map((tech, key) => (
                     <span
                       key={key}
