@@ -16,7 +16,7 @@ export const About = () => {
         <p className="text-gray-300 mb-6">
               I am Preet Patel. I am studying Computer Science and Engineering (ML Concentration) with a minor in Mathematics.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
                     
                     {/* Education Section */}
                     <div className="py-3 px-6 rounded-xl border-white/10 border hover:-translate-y-0.75 transition-all">
@@ -32,7 +32,7 @@ export const About = () => {
                                             <h3>@ University of Louisville</h3>
                                         </h4>
                                         <span className="text-sm text-gray-400 w-5/10 text-right">
-                                            2023 - 2026
+                                            2023 - 2026 < br />
                                             GPA: 3.8
                                         </span>
                                     </div>
@@ -82,7 +82,7 @@ export const About = () => {
                                         Software Engineering Intern @Challenge Technolabs
                                     </h4>
                                     <span className="text-sm text-gray-400 w-4/10 text-right">
-                                        Apr 2025 - Aug 2025
+                                        Apr 2025 - <br />Aug 2025
                                     </span>
                                 </div>
                                     <ul className="text-sm list-disc list-inside mt-2 space-y-0.3">
@@ -99,11 +99,11 @@ export const About = () => {
                                         Bioinformatics Researcher @ OCTC 
                                     </h4>
                                     <span className="text-sm text-gray-400 w-4/10 text-right">
-                                        Sept 2021 - May 2023
+                                        Sep 2021 - <br />May 2023
                                     </span>
                                 </div>
-                                    <ul className="text-xs list-disc list-outside mt-2 px-3 space-y-0.3">
-                                        <li>Conducted data analysis Poly-cystic Kidney Disease</li>
+                                    <ul className="text-sm list-disc list-outside mt-2 px-3 space-y-0.3">
+                                        <li>Conducted data analysis Polycystic Kidney Disease</li>
                                     </ul>
                             </div>
                         </div>
