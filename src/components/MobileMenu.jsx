@@ -21,7 +21,7 @@ export const MobileMenu = ({menuOpen, setMenuOpen}) => {
                 &times;
             </button>
             
-            <a>
+            
             <a 
             //font-mono text-lg font-bold text-red-500 hover:text-white transition-colors
                 href="#home"
@@ -74,7 +74,7 @@ export const MobileMenu = ({menuOpen, setMenuOpen}) => {
                 >
                     Contact{" "}
                 </a>
-            </a>
+            
         </div>
     );
 }
