@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 export const LoadingScreen = ({ onComplete }) => {
   const [text, setText] = useState("");
-  const fullText = "< turn your dreams in reality >";
+  const fullText = "< turn your dreams into reality >";
 
   useEffect(() => {
     let index = 0;
@@ -17,7 +17,7 @@ export const LoadingScreen = ({ onComplete }) => {
           onComplete();
         }, 1000);
       }
-    }, 100);
+    }, 70);
 
     return () => clearInterval(interval);
   }, [onComplete]);
