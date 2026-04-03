@@ -22,8 +22,10 @@ const experiences = [
     date: "Aug 2025 – Present",
     current: true,
     responsibilities: [
-      "[ PLACEHOLDER: Add responsibility 1 ]",
-      "[ PLACEHOLDER: Add responsibility 2 ]",
+      "Engineered fio benchmarking experiments across multi-generational storage devices, cutting data collection runtime by 81% while delivering latency, throughput, and queue-depth analysis with direct implications for storage scheduler design.",
+      "Analyzed I/O traces of storage system access patterns from ML training workloads targeting caching optimization in large-scale distributed storage systems",
+      "",
+      "Conducted structured literature reviews of published systems research, developed data visualization to communicate benchmark results, and contextualized findings against prior work.",
     ],
   },
   {
@@ -65,7 +67,7 @@ const TimelineItem = ({ exp, index }) => {
           observer.unobserve(entry.target); // persists after appearing
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.4 },
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -78,22 +80,21 @@ const TimelineItem = ({ exp, index }) => {
       className={`relative pb-12 pl-12 transition-all duration-700 ease-out ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       }`}
-      style={{ transitionDelay: `${index * 170}ms` }}
+      style={{ transitionDelay: `${index * 130}ms` }}
     >
       {/* Timeline dot */}
       <div
-        className={`absolute top-1.5 left-4 h-3.5 w-3.5 -translate-x-1/2 rounded-full transition-all duration-500 ${
+        className={`absolute top-1.5 left-4 h-3.5 w-3.5 -translate-x-1/2 rounded-full transition-all duration-300 ${
           visible
             ? "bg-gradient-to-br from-red-500 to-purple-500 shadow-[0_0_14px_rgba(168,85,247,0.7)]"
             : "border border-gray-600 bg-gray-800"
         }`}
-        style={{ transitionDelay: `${index * 170 + 200}ms` }}
+        style={{ transitionDelay: `${index * 130 + 200}ms` }}
       />
-
       {/* Title + date */}
       <div className="mb-1 flex flex-col gap-1.5 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h3 className="text-base leading-snug font-bold text-white">{exp.title}</h3>
+          <h3 className="text-lg leading-snug font-semibold text-white">{exp.title}</h3>
           {exp.subtitle && (
             <p className="mt-0.5 text-sm font-medium text-purple-400">{exp.subtitle}</p>
           )}
@@ -128,14 +129,14 @@ const TimelineItem = ({ exp, index }) => {
 export const Experience = () => {
   return (
     <section id="experience" className="px-4 py-20">
-      <div className="mx-auto max-w-3xl">
-        <h2 className="mb-16 bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-center text-5xl font-bold text-transparent">
+      <div className="mx-auto max-w-5xl">
+        <h2 className="mb-12 bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-center text-5xl font-bold text-transparent">
           Experience
         </h2>
 
         <div className="relative">
           {/* Vertical gradient line */}
-          <div className="absolute top-2 bottom-0 left-4 w-px bg-gradient-to-b from-red-500 via-purple-500/60 to-transparent" />
+          <div className="absolute top-2 bottom-0 left-4 w-px bg-gradient-to-b from-red-700 via-purple-700/75 to-transparent" />
 
           {experiences.map((exp, index) => (
             <TimelineItem key={exp.id} exp={exp} index={index} />
