@@ -9,8 +9,11 @@ const SECTIONS = [
 ];
 
 const N = SECTIONS.length;
-const ITEM_H = 44;
-// Triple array for the infinite scroll trick , but the middle array is the real, "determining" one
+const ITEM_H = 50; // bigger: was 44
+const WIDTH = 150; // bigger: was 168
+const NAVBAR_H = 64;
+const PILL_TOP_OFFSET = (NAVBAR_H - ITEM_H) / 2;
+const BORDER_OFFSET = NAVBAR_H - PILL_TOP_OFFSET;
 const ITEMS = [...SECTIONS, ...SECTIONS, ...SECTIONS];
 
 export const SectionWheel = () => {
@@ -31,7 +34,7 @@ export const SectionWheel = () => {
         ([entry]) => {
           if (entry.isIntersecting) setActiveIdx(i);
         },
-        { threshold: 0.35, rootMargin: "-80px 0px -20% 0px" },
+        { threshold: 0.3, rootMargin: "-80px 0px -20% 0px" },
       );
       obs.observe(el);
       return obs;
@@ -39,7 +42,7 @@ export const SectionWheel = () => {
     return () => observers.forEach((o) => o.disconnect());
   }, []);
 
-  // sync drum to active section when wheel closes
+  // Sync drum when wheel closes or active section changes
   useEffect(() => {
     if (!isOpen) {
       setTransitionOn(false);
@@ -54,7 +57,7 @@ export const SectionWheel = () => {
     }
   }, [activeIdx]); // eslint-disable-line
 
-  // infinite scroll trick
+  // Infinite boundary reset
   useEffect(() => {
     if (virtIdx < N) {
       setTransitionOn(false);
@@ -65,6 +68,7 @@ export const SectionWheel = () => {
     }
   }, [virtIdx]);
 
+  // Re-enable transition after instant snap
   useEffect(() => {
     if (!transitionOn) {
       const raf = requestAnimationFrame(() => requestAnimationFrame(() => setTransitionOn(true)));
@@ -72,6 +76,7 @@ export const SectionWheel = () => {
     }
   }, [transitionOn]);
 
+  // Mouse wheel
   const handleWheel = useCallback(
     (e) => {
       if (!isOpen) return;
@@ -88,7 +93,7 @@ export const SectionWheel = () => {
     return () => el.removeEventListener("wheel", handleWheel);
   }, [handleWheel]);
 
-  // keyboard
+  // Keyboard
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e) => {
@@ -106,13 +111,15 @@ export const SectionWheel = () => {
     setIsOpen(false);
   };
 
-  // translateY: closed -> selected item at top of 1-slot container
-  //             open   -> selected item centered in 3-slot container (offset +1 item)
-  const translateY = isOpen ? -(virtIdx * ITEM_H) + ITEM_H : -(virtIdx * ITEM_H);
+  const translateY = isOpen
+    ? -(virtIdx * ITEM_H) + ITEM_H // center selected in 3-slot drum
+    : -(virtIdx * ITEM_H); // show only selected in 1-slot drum
+
   return (
     <div
       ref={containerRef}
       className="relative select-none"
+      style={{ height: ITEM_H, width: WIDTH }}
       onMouseEnter={() => setIsOpen(true)}
       onMouseLeave={() => setIsOpen(false)}
       tabIndex={0}
@@ -120,68 +127,103 @@ export const SectionWheel = () => {
       onBlur={() => setIsOpen(false)}
       aria-label="Section navigation"
     >
-      {/* Clip container */}
+      {/* Glass pill */}
       <div
-        className="relative overflow-hidden rounded-xl border border-white/10 bg-black/60 backdrop-blur-md"
+        className="relative overflow-hidden rounded-xl border border-white/20"
         style={{
+          boxShadow: isOpen
+            ? "0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.12), 0 0 0 1px rgba(168,85,247,0.12)"
+            : "0 2px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)",
           height: isOpen ? ITEM_H * 3 : ITEM_H,
-          width: 168,
-          transition: "height 280ms cubic-bezier(0.16, 1, 0.3, 1)",
+          width: WIDTH,
+          zIndex: 50,
+          transition: "height 300ms cubic-bezier(0.2, 0, 0, 1), box-shadow 300ms",
+          background: isOpen ? "rgba(5, 5, 5, 0.99)" : "rgba(1, 1, 1, 0.99)",
+          backdropFilter: "blur(24px) saturate(180%)",
+          WebkitBackdropFilter: "blur(24px) saturate(180%)",
         }}
       >
-        {/* Top fade mask */}
+        <div
+          className="pointer-events-none absolute inset-x-0"
+          style={{
+            top: BORDER_OFFSET,
+            height: 1,
+            background: "rgba(8, 8, 8, 0.98)",
+            zIndex: 20,
+            opacity: isOpen ? 1 : 0,
+            transition: "opacity 150ms",
+          }}
+        />
+        {/*
+          FIX: masks are now only ITEM_H * 0.45 tall (not full ITEM_H)
+          so the neighbor text centered in its slot sits BELOW the fully
+          opaque portion and is clearly readable.
+        */}
         <div
           className="pointer-events-none absolute inset-x-0 top-0 z-10"
           style={{
-            height: ITEM_H,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.92), transparent)",
+            height: ITEM_H * 0.45,
+            background: "linear-gradient(to bottom, rgba(4,4,4,0.88), transparent)",
             opacity: isOpen ? 1 : 0,
-            transition: "opacity 200ms",
+            transition: "opacity 220ms",
           }}
         />
-        {/* Bottom fade mask */}
         <div
           className="pointer-events-none absolute inset-x-0 bottom-0 z-10"
           style={{
-            height: ITEM_H,
-            background: "linear-gradient(to top, rgba(0,0,0,0.92), transparent)",
+            height: ITEM_H * 0.45,
+            background: "linear-gradient(to top, rgba(4,4,4,0.88), transparent)",
             opacity: isOpen ? 1 : 0,
-            transition: "opacity 200ms",
+            transition: "opacity 220ms",
           }}
         />
 
-        {/* Center row highlight */}
+        {/* Subtle horizontal center dividers — visible only when open */}
+        {/* 
         <div
-          className="pointer-events-none absolute inset-x-3 z-0 rounded-md"
+          className="pointer-events-none absolute inset-x-4 z-10"
           style={{
             top: ITEM_H,
-            height: ITEM_H,
-            background: "linear-gradient(90deg, rgba(239,68,68,0.08), rgba(168,85,247,0.08))",
-            border: "1px solid rgba(168,85,247,0.18)",
+            height: 1,
+            background: "rgba(255,255,255,0.06)",
             opacity: isOpen ? 1 : 0,
-            transition: "opacity 280ms",
+            transition: "opacity 220ms",
           }}
         />
-
+        <div
+          className="pointer-events-none absolute inset-x-4 z-10"
+          style={{
+            top: ITEM_H * 2,
+            height: 1,
+            background: "rgba(255,255,255,0.06)",
+            opacity: isOpen ? 1 : 0,
+            transition: "opacity 220ms",
+          }}
+        />
+      */}
         {/* The drum */}
         <div
           style={{
             transform: `translateY(${translateY}px)`,
-            transition: transitionOn ? "transform 220ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
+            transition: transitionOn ? "transform 230ms cubic-bezier(0.16, 1, 0.3, 1)" : "none",
           }}
         >
           {ITEMS.map((section, i) => {
             const isSel = i === virtIdx;
             const dist = Math.abs(i - virtIdx);
+
             return (
               <div
                 key={`${section.id}-${i}`}
                 className="flex cursor-pointer items-center justify-center font-mono font-bold"
                 style={{
                   height: ITEM_H,
-                  opacity: isSel ? 1 : dist === 1 ? 0.35 : 0.08,
-                  fontSize: isSel ? "0.95rem" : "0.78rem",
-                  transition: "opacity 180ms, font-size 180ms",
+                  // FIX: neighbors at 0.72 opacity (was 0.35) — clearly readable
+                  opacity: isSel ? 1 : dist === 1 ? 0.72 : 0.05,
+                  fontSize: isSel ? "1.15rem" : "1.03rem",
+                  // letterSpacing: isSel ? "0.025em" : "0.06em",
+                  // textTransform: !isSel ? "uppercase" : "none",
+                  transition: "opacity 200ms, font-size 200ms, letter-spacing 200ms",
                   pointerEvents: isSel || dist === 1 ? "auto" : "none",
                 }}
                 onClick={() => {
@@ -190,11 +232,11 @@ export const SectionWheel = () => {
                 }}
               >
                 {isSel ? (
-                  <span className="bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-transparent">
-                    {section.label}
-                  </span>
+                  // Selected: gradient text only, no card
+                  <span className="text-red-500">{section.label}</span>
                 ) : (
-                  <span className="text-gray-400">{section.label}</span>
+                  // Neighbors: plain white, no gradient
+                  <span className="text-white/80">{section.label}</span>
                 )}
               </div>
             );
@@ -202,15 +244,19 @@ export const SectionWheel = () => {
         </div>
       </div>
 
-      {/* Usage hint */}
-      {/* 
+      {/* Hint — slides in from right when open */}
       <div
-        className="pointer-events-none absolute inset-x-0 -bottom-5 text-center font-mono text-xs text-gray-600"
-        style={{ opacity: isOpen ? 1 : 0, transition: "opacity 200ms" }}
+        className="pointer-events-none absolute top-0 flex items-center font-mono text-xs tracking-widest whitespace-nowrap text-purple-400 uppercase"
+        style={{
+          height: ITEM_H * 3,
+          left: WIDTH + 12,
+          opacity: isOpen ? 1 : 0,
+          transform: isOpen ? "translateX(0)" : "translateX(-20px)",
+          transition: "opacity 250ms 100ms, transform 250ms 100ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
       >
-        scroll · enter to navigate
+        scroll · click/enter to go
       </div>
-      */}
     </div>
   );
 };
