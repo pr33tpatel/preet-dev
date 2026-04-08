@@ -4,9 +4,8 @@ const SECTIONS = [
   { label: "Home", id: "home" },
   { label: "Experience", id: "experience" },
   { label: "Education", id: "education" },
-
-  { label: "About", id: "about" },
   { label: "Projects", id: "projects" },
+  { label: "About", id: "about" },
   { label: "Contact", id: "contact" },
 ];
 
