@@ -16,6 +16,7 @@ export const Home = () => {
            insert text here 
           </p>
           */}
+          {/* 
           <div className="mt-10 flex flex-wrap gap-4">
             <a
               href="#projects"
@@ -31,6 +32,7 @@ export const Home = () => {
               About Me
             </a>
           </div>
+          */}
         </div>
       </div>
     </section>

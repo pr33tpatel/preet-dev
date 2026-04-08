@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 
 const diffCurrentExperience = false;
+const showBulletPoints = true;
+
 const experiences = [
   {
     id: 0,
@@ -9,9 +11,9 @@ const experiences = [
     date: "Jan 2026 – Present",
     current: true,
     responsibilities: [
-      "[ PLACEHOLDER: Add responsibility 1 ]",
-      "[ PLACEHOLDER: Add responsibility 2 ]",
-      "[ PLACEHOLDER: Add responsibility 3 ]",
+      "Diagnosed and resolved a critical performance bottleneck on a client-facing page by implementing server-side pagination, MongoDB compound indexing, and Redis caching, reducing load times from 7-9s to under 600ms — a 10-15x improvement.",
+      "Identified and resolved a cache invalidation race condition by migrating to a write-through caching strategy, eliminating stale data reads on concurrent write operations.",
+      "Contributed to a restaurant waste analysis dashboard by building a Random Forest regression model in Python (scikit-learn) served via a Flask microservice, integrated into a Node.js/Express backend via REST API to surface data-driven prep recommendations.",
     ],
   },
   {
@@ -24,7 +26,6 @@ const experiences = [
     responsibilities: [
       "Engineered fio benchmarking experiments across multi-generational storage devices, cutting data collection runtime by 81% while delivering latency, throughput, and queue-depth analysis with direct implications for storage scheduler design.",
       "Analyzed I/O traces of storage system access patterns from ML training workloads targeting caching optimization in large-scale distributed storage systems",
-      "",
       "Conducted structured literature reviews of published systems research, developed data visualization to communicate benchmark results, and contextualized findings against prior work.",
     ],
   },
@@ -35,9 +36,9 @@ const experiences = [
     date: "May 2025 – Aug 2025",
     current: false,
     responsibilities: [
-      "[ PLACEHOLDER: Add responsibility 1 ]",
-      "[ PLACEHOLDER: Add responsibility 2 ]",
-      "[ PLACEHOLDER: Add responsibility 3 ]",
+      "Developed a dynamic menu display system for a restaurant client using React and a Node.js/Express REST API, enabling automatic UI layout adjustments based on real-time menu data.",
+      "Built Python automation scripts for daily database backups and server log processing, reducing manual operational overhead and improving team visibility into performance issues.",
+      "Refactored monolithic functions across the codebase into single-responsibility modules, improving maintainability and reducing complexity across critical order submission flows.",
     ],
   },
   {
@@ -109,34 +110,52 @@ const TimelineItem = ({ exp, index }) => {
           {exp.date}
         </span>
       </div>
-
       {/* Company */}
       <p className="mb-3 text-sm font-semibold text-red-500">{exp.company}</p>
-
       {/* Responsibilities */}
-      <ul className="space-y-2">
-        {exp.responsibilities.map((r, i) => (
-          <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-gray-300">
-            <span className="mt-0.5 shrink-0 text-xs text-purple-500">▸</span>
-            {r}
-          </li>
-        ))}
-      </ul>
+      <div>
+        {showBulletPoints && (
+          <ul className="space-y-2">
+            {exp.responsibilities.map((r, i) => (
+              <li key={i} className="flex items-start gap-2 text-sm leading-relaxed text-gray-300">
+                <span className="mt-0.5 shrink-0 text-xs text-purple-500">▸</span>
+                {r}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
 
 export const Experience = () => {
+  const timelineRef = useRef(null);
+
   return (
     <section id="experience" className="px-4 py-20">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="mb-12 bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-center text-5xl font-bold text-transparent">
-          Experience
-        </h2>
+      <div className="mx-auto max-w-4xl">
+        {/* Heading + Resume button */}
+        <div className="mb-16 flex items-center justify-between">
+          <h2 className="bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-5xl font-bold text-transparent">
+            Experience
+          </h2>
+          <a
+            href="https://www.linkedin.com/in/preet-patel1223/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg border border-red-500/30 px-4 py-2 text-sm font-bold text-red-500 transition-all duration-200 hover:border-red-500/60 hover:bg-red-500/10"
+          >
+            Résumé <span className="text-xs">↗</span>
+          </a>
+        </div>
 
-        <div className="relative">
-          {/* Vertical gradient line */}
-          <div className="absolute top-2 bottom-0 left-4 w-px bg-gradient-to-b from-red-700 via-purple-700/75 to-transparent" />
+        <div className="relative" ref={timelineRef}>
+          {/* Dim base line */}
+          <div className="absolute top-2 bottom-0 left-4 w-px bg-white/5" />
+
+          {/* Static gradient line */}
+          <div className="absolute top-2 bottom-0 left-4 w-px bg-gradient-to-b from-red-500 via-purple-500 to-purple-400/50" />
 
           {experiences.map((exp, index) => (
             <TimelineItem key={exp.id} exp={exp} index={index} />
