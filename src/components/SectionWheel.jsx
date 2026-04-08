@@ -3,6 +3,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 const SECTIONS = [
   { label: "Home", id: "home" },
   { label: "Experience", id: "experience" },
+  { label: "Education", id: "education" },
+
   { label: "About", id: "about" },
   { label: "Projects", id: "projects" },
   { label: "Contact", id: "contact" },
