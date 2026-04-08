@@ -1,44 +1,66 @@
 import { useEffect, useRef, useState } from "react";
 
-const DEGREE_LINES = [
-  { key: "Degree", value: "B.S. Computer Science & Engineering" },
-  { key: "Minor", value: "Mathematics" },
-  { key: "Institution", value: "University of Louisville" },
-  { key: "GPA", value: "3.8 / 4.0" },
-  { key: "Expected", value: "May 2026" },
-];
+// Add these to your index.html <head> if not already present:
+// <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+// <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
 
-const COURSEWORK = {
-  "systems/": [
-    "Operating Systems",
-    "Database Design",
-    "Computer Networks", // placeholder
-    "Computer Architecture", // placeholder
-  ],
-  "theory/": [
-    "Data Structures & Algorithms",
-    "Combinatorial Optimization & Modern Heuristics",
-    "Discrete Mathematics",
-    "Automata & Formal Languages", // placeholder
-    "Analysis of Algorithms", // placeholder
-  ],
-  "ai-ml/": [
-    "Data Analytics",
-    "Machine Learning", // placeholder
-    "Natural Language Processing", // placeholder
-    "Artifical Intelligence",
-  ],
-  "math/": [
-    "Calculus I–III", // placeholder
-    "Linear Algebra", // placeholder
-    "Probability & Statistics", // placeholder
-    "Differential Equations", // placeholder
-  ],
+const showCourseNumber = false;
+
+const DEGREE = {
+  title: "B.S. Computer Science & Engineering",
+  school: "University of Louisville",
+  department: "J.B. Speed School of Engineering",
+  graduation: "Dec 2026",
+  gpa: "3.8 / 4.0",
 };
 
-const DIRS = Object.keys(COURSEWORK);
+const COURSEWORK = [
+  {
+    category: "Systems",
+    icon: "settings_ethernet",
+    color: "red",
+    courses: [
+      { name: "Operating Systems", number: "CSE 420" },
+      { name: "Database Design", number: "CSE 335" },
+      { name: "Computer Architecture", number: "CSE 621" },
+      { name: "Computer Networks", number: "CSE 516" },
+    ],
+  },
+  {
+    category: "Theory",
+    icon: "account_tree",
+    color: "purple",
+    courses: [
+      { name: "Data Structures & Algorithms", number: "CSE " },
+      { name: "Analysis of Algorithms", number: "CSE " },
+      { name: "Discrete Mathematics", number: "CSE " },
+      { name: "Formal Languages", number: "CSE " },
+    ],
+  },
+  {
+    category: "AI / ML",
+    icon: "memory",
+    color: "red",
+    courses: [
+      { name: "Machine Learning", number: "CSE " },
+      { name: "Artifical Intelligence", number: "CSE " },
+      { name: "Natural Language Processing", number: "CSE " },
+      { name: "Data Analytics", number: "CSE " },
+    ],
+  },
+  {
+    category: "Math",
+    icon: "functions",
+    color: "purple",
+    courses: [
+      { name: "Calculus I–III", number: "MATH " },
+      { name: "Linear Algebra", number: "MATH " },
+      { name: "Probability & Statistics", number: "MATH " },
+      { name: "Differential Equations", number: "MATH " },
+    ],
+  },
+];
 
-// Staggered reveal hook
 const useReveal = (ref) => {
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -49,7 +71,7 @@ const useReveal = (ref) => {
           obs.disconnect();
         }
       },
-      { threshold: 0.1 },
+      { threshold: 0.05 },
     );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
@@ -57,12 +79,12 @@ const useReveal = (ref) => {
   return visible;
 };
 
-const TerminalLine = ({ children, delay = 0, visible, className = "" }) => (
+const FadeIn = ({ children, delay = 0, visible, className = "" }) => (
   <div
-    className={`font-mono transition-all duration-500 ease-out ${className}`}
+    className={`transition-all duration-600 ease-out ${className}`}
     style={{
       opacity: visible ? 1 : 0,
-      transform: visible ? "translateY(0)" : "translateY(6px)",
+      transform: visible ? "translateY(0)" : "translateY(12px)",
       transitionDelay: `${delay}ms`,
     }}
   >
@@ -70,115 +92,145 @@ const TerminalLine = ({ children, delay = 0, visible, className = "" }) => (
   </div>
 );
 
+const CourseColumn = ({ category, icon, color, courses, colIndex, visible }) => {
+  const accentClass = color === "red" ? "text-red-500" : "text-purple-500";
+  const hoverClass = color === "red" ? "hover:text-red-500" : "hover:text-purple-500";
+
+  return (
+    <FadeIn visible={visible} delay={400 + colIndex * 100} className="space-y-4">
+      {/* Category header */}
+      <div className="flex items-center gap-2 font-mono text-sm tracking-widest text-gray-400 uppercase">
+        <span className={`material-symbols-outlined text-lg ${accentClass}`}>{icon}</span>
+        {category}
+      </div>
+
+      {/* Course list with tree connectors */}
+      <ul className="space-y-4 font-mono">
+        {courses.map((course, i) => {
+          const isLast = i === courses.length - 1;
+          return (
+            <li
+              key={course}
+              className="group ml-0.5 flex items-center gap-3 transition-all duration-500 ease-out"
+              style={{
+                opacity: visible ? 1 : 0,
+                transform: visible ? "translateY(0)" : "translateY(6px)",
+                transitionDelay: `${500 + colIndex * 100 + i * 60}ms`,
+              }}
+            >
+              <span className={`${accentClass} mt-0.5 shrink-0 select-none`}>
+                {isLast ? "└─" : "├─"}
+              </span>
+              <span
+                className={`text-sm leading-snug text-gray-300 transition-colors duration-200 ${hoverClass} cursor-default`}
+              >
+                {course.name}
+              </span>
+
+              {showCourseNumber && (
+                <span className={`cursor-default text-sm leading-snug text-gray-600`}>
+                  {course.number}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </FadeIn>
+  );
+};
+
 export const Education = () => {
   const ref = useRef(null);
   const visible = useReveal(ref);
-  const [openDirs, setOpenDirs] = useState({});
-
-  const toggleDir = (dir) => setOpenDirs((prev) => ({ ...prev, [dir]: !prev[dir] }));
 
   return (
-    <section id="education" className="px-4 py-20" ref={ref}>
-      <div className="mx-auto max-w-4xl">
-        {/* Section heading */}
-        <TerminalLine visible={visible} delay={0}>
-          <h2 className="mb-16 bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-5xl font-bold text-transparent">
-            Education
-          </h2>
-        </TerminalLine>
-
-        {/* cat degree.txt */}
-        <TerminalLine visible={visible} delay={80} className="mb-3">
-          <span className="text-sm text-gray-600">$ </span>
-          <span className="text-sm text-purple-400">cat</span>
-          <span className="text-sm text-gray-300"> degree.txt</span>
-        </TerminalLine>
-
-        <div className="mb-12 space-y-1.5 pl-4">
-          {DEGREE_LINES.map((line, i) => (
-            <TerminalLine key={line.key} visible={visible} delay={140 + i * 60}>
-              <div className="flex gap-3 text-sm">
-                <span className="w-28 shrink-0 text-gray-600">{line.key}:</span>
-                <span className="text-gray-200">{line.value}</span>
-              </div>
-            </TerminalLine>
-          ))}
-        </div>
-
-        {/* ls coursework/ */}
-        <TerminalLine visible={visible} delay={500} className="mb-4">
-          <span className="text-sm text-gray-600">$ </span>
-          <span className="text-sm text-purple-400">ls</span>
-          <span className="text-sm text-gray-300"> coursework/</span>
-        </TerminalLine>
-
-        {/* Directory row */}
-        <TerminalLine visible={visible} delay={580} className="mb-10 pl-4">
-          <div className="flex flex-wrap gap-x-8 gap-y-1 text-sm">
-            {DIRS.map((dir) => (
-              <span key={dir} className="text-red-400">
-                {dir}
-              </span>
-            ))}
+    <section id="education" className="px-6 py-32 md:px-12" ref={ref}>
+      <div className="mx-auto max-w-5xl">
+        {/* Terminal breadcrumb */}
+        <FadeIn visible={visible} delay={0}>
+          <div className="mb-6 flex items-center gap-3 font-mono text-sm text-red-400/80">
+            <span className="material-symbols-outlined text-sm">terminal</span>
+            <span>~/profile/academic_path</span>
           </div>
-        </TerminalLine>
+        </FadeIn>
+        {/* Hero heading */}
+        <FadeIn visible={visible} delay={80}>
+          <h2
+            className="mb-5 bg-gradient-to-r from-red-500 to-purple-700 bg-clip-text text-7xl leading-tight font-bold tracking-tighter text-transparent md:text-8xl"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            EDUCATION
+          </h2>
+        </FadeIn>
+        {/* Degree info — left/right split */}
+        <FadeIn visible={visible} delay={160}>
+          <div className="mb-10 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div>
+              <h3 className="font-mono text-2xl text-white md:text-3xl">{DEGREE.title}</h3>
+              <p className="mt-2 font-mono text-sm text-gray-500">
+                {DEGREE.school} • {DEGREE.department}
+              </p>
+            </div>
+            <div className="shrink-0 text-left font-mono md:text-right">
+              <span className="text--500 block text-lg">{DEGREE.graduation}</span>
+              <span className="text-sm tracking-widest text-gray-500">GPA: {DEGREE.gpa}</span>
+            </div>
+          </div>
+        </FadeIn>
+        {/* $ ls coursework/ */}
+        <FadeIn visible={visible} delay={260}>
+          <div className="md:text-md mb-4 flex items-center gap-3 font-mono text-sm">
+            <span className="text-gray-600">$</span>
+            <span className="text-white">ls</span>
+            <span className="text-fuchsia-300">coursework/</span>
+          </div>
+        </FadeIn>
+        {/* 4-column grid */}
+        <div className="relative grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-4">
+          {/* Vertical separator lines — desktop only */}
+          {[25, 50, 75].map((pos) => (
+            <div
+              key={pos}
+              className="pointer-events-none absolute inset-y-0 hidden w-px lg:block"
+              style={{
+                left: `${pos}%`,
+                background:
+                  "linear-gradient(to bottom, rgba(239,68,68,0.15), rgba(168,85,247,0.15), transparent)",
+              }}
+            />
+          ))}
 
-        {/* ls coursework/<dir>/ — expandable */}
-        <div className="space-y-6 pl-4">
-          {DIRS.map((dir, di) => (
-            <TerminalLine key={dir} visible={visible} delay={660 + di * 80}>
-              {/* Command line — clickable */}
-              <button
-                onClick={() => toggleDir(dir)}
-                className="group mb-2 flex w-full cursor-pointer items-center gap-2 text-left text-sm"
-              >
-                <span className="text-gray-600">$ </span>
-                <span className="text-purple-400">ls</span>
-                <span className="text-gray-300"> coursework/{dir}</span>
-                <span
-                  className="ml-1 text-xs text-gray-600 transition-transform duration-200"
-                  style={{
-                    display: "inline-block",
-                    transform: openDirs[dir] ? "rotate(90deg)" : "rotate(0deg)",
-                  }}
-                >
-                  ▸
-                </span>
-                <span className="ml-1 text-xs text-gray-700 opacity-0 transition-opacity group-hover:opacity-100">
-                  {openDirs[dir] ? "collapse" : "expand"}
-                </span>
-              </button>
-
-              {/* Course list */}
-              <div
-                style={{
-                  maxHeight: openDirs[dir] ? "400px" : "0px",
-                  overflow: "hidden",
-                  transition: "max-height 350ms cubic-bezier(0.16, 1, 0.3, 1)",
-                }}
-              >
-                <div className="flex flex-wrap gap-x-10 gap-y-1 pb-2 pl-4">
-                  {COURSEWORK[dir].map((course) => (
-                    <span key={course} className="font-mono text-sm text-gray-400">
-                      {course
-                        .toLowerCase()
-                        .replace(/\s+/g, "-")
-                        .replace(/[&]/g, "and")
-                        .replace(/[–—]/g, "-")
-                        .replace(/[^a-z0-9-]/g, "")}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </TerminalLine>
+          {COURSEWORK.map((col, i) => (
+            <CourseColumn
+              key={col.category}
+              category={col.category}
+              icon={col.icon}
+              color={col.color}
+              courses={col.courses}
+              colIndex={i}
+              visible={visible}
+            />
           ))}
         </div>
-
-        {/* Trailing cursor */}
-        <TerminalLine visible={visible} delay={980} className="mt-10">
-          <span className="text-sm text-gray-600">$ </span>
-          <span className="animate-pulse text-sm text-gray-400">▌</span>
-        </TerminalLine>
+        {/* Terminal footer */}
+        <FadeIn visible={visible} delay={900}>
+          <div
+            className="mt-24 pt-10 font-mono text-sm text-gray-600"
+            style={{ borderTop: "1px solid rgba(255,255,255,0.5)" }}
+          >
+            {/* 
+            <div className="flex items-center gap-2">
+              <span className="text-purple-500">#</span>
+              <span>System operational. Knowledge graph updated.</span>
+            </div>
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-red-500">&gt;</span>
+              <span className="animate-pulse text-gray-400">_</span>
+            </div>
+*/}
+          </div>
+        </FadeIn>
       </div>
     </section>
   );
