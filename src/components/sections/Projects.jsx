@@ -259,7 +259,7 @@ export const Projects = () => {
               <div className="mb-1 flex items-center gap-4">
                 {/* <span className="font-mono text-xl text-red-500">$</span>*/}
                 <h2
-                  className="text-4xl font-bold tracking-tight uppercase md:text-6xl"
+                  className="text-4xl font-bold tracking-tight uppercase md:text-7xl"
                   style={{
                     fontFamily: "'Space Grotesk', sans-serif",
                     background: "linear-gradient(to right, #ef4444, #a855f7)",
@@ -267,7 +267,7 @@ export const Projects = () => {
                     WebkitTextFillColor: "transparent",
                   }}
                 >
-                  projects <span className="animate-pulse">_</span>
+                  PROJECTS <span className="animate-pulse">_</span>
                 </h2>
 
                 <FadeIn visible={visible} delay={80}>
@@ -360,4 +360,3 @@ export const Projects = () => {
     </section>
   );
 };
-

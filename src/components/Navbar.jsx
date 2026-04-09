@@ -53,7 +53,7 @@ export const Navbar = ({ menuOpen, setMenuOpen }) => {
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
         background: scrolled ? "rgba(0,0,0,0.6)" : "transparent",
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.04)" : "none",
+        borderBottom: scrolled ? "none" : "none",
       }}
     >
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5">
@@ -109,7 +109,7 @@ export const Navbar = ({ menuOpen, setMenuOpen }) => {
             className="hidden font-mono text-[11px] tracking-widest text-fuchsia-300 uppercase xl:block"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
-            LOU | KY
+            NYC | SDF
           </span>
 
           {/* Résumé — lg+ only */}

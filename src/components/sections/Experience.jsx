@@ -56,6 +56,37 @@ const experiences = [
   },
 ];
 
+const useReveal = (ref) => {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { threshold: 0.05 },
+    );
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [ref]);
+  return visible;
+};
+
+const FadeIn = ({ children, delay = 0, visible, className = "" }) => (
+  <div
+    className={`transition-all duration-600 ease-out ${className}`}
+    style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? "translateY(0)" : "translateY(12px)",
+      transitionDelay: `${delay}ms`,
+    }}
+  >
+    {children}
+  </div>
+);
+
 const TimelineItem = ({ exp, index }) => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -134,22 +165,15 @@ export const Experience = () => {
 
   return (
     <section id="experience" className="px-4 py-20">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
+        // {/* Terminal breadcrumb */}
+        /* NOTE: add terminal breadcrumb like in Education and Projects section*/
         {/* Heading + Resume button */}
-        <div className="mb-16 flex items-center justify-between">
-          <h2 className="bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-5xl font-bold text-transparent">
+        <div className="mb-7 flex items-center justify-between">
+          <h2 className="bg-gradient-to-r from-red-500 to-purple-500 bg-clip-text text-7xl font-bold text-transparent uppercase">
             Experience
           </h2>
-          <a
-            href="https://www.linkedin.com/in/preet-patel1223/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 rounded-lg border border-red-500/30 px-4 py-2 text-sm font-bold text-red-500 transition-all duration-200 hover:border-red-500/60 hover:bg-red-500/10"
-          >
-            Résumé <span className="text-xs">↗</span>
-          </a>
         </div>
-
         <div className="relative" ref={timelineRef}>
           {/* Dim base line */}
           <div className="absolute top-2 bottom-0 left-4 w-px bg-white/5" />

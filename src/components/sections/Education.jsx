@@ -10,6 +10,8 @@ const DEGREE = {
   title: "B.S. Computer Science & Engineering",
   school: "University of Louisville",
   department: "J.B. Speed School of Engineering",
+  minor: "Minor in Mathematics",
+  concentration: "Systems and ML",
   graduation: "Dec 2026",
   gpa: "3.8 / 4.0",
 };
@@ -157,7 +159,7 @@ export const Education = () => {
         {/* Hero heading */}
         <FadeIn visible={visible} delay={80}>
           <h2
-            className="mb-5 bg-gradient-to-r from-red-500 to-purple-700 bg-clip-text text-7xl leading-tight font-bold tracking-tighter text-transparent md:text-8xl"
+            className="bg-gradient-to-r from-red-500 to-purple-700 bg-clip-text text-4xl font-bold tracking-tight text-transparent md:text-7xl"
             style={{ fontFamily: "'Space Grotesk', sans-serif" }}
           >
             EDUCATION
@@ -169,7 +171,7 @@ export const Education = () => {
             <div>
               <h3 className="font-mono text-2xl text-white md:text-3xl">{DEGREE.title}</h3>
               <p className="mt-2 font-mono text-sm text-gray-500">
-                {DEGREE.school} • {DEGREE.department}
+                {DEGREE.school} • {DEGREE.concentration} • {DEGREE.minor}
               </p>
             </div>
             <div className="shrink-0 text-left font-mono md:text-right">
@@ -216,7 +218,7 @@ export const Education = () => {
         {/* Terminal footer */}
         <FadeIn visible={visible} delay={900}>
           <div
-            className="mt-24 pt-10 font-mono text-sm text-gray-600"
+            className="pt-0 font-mono text-sm text-gray-600 md:mt-45"
             style={{ borderTop: "1px solid rgba(255,255,255,0.5)" }}
           >
             {/* 
